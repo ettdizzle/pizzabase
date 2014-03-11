@@ -5,8 +5,8 @@ require 'diametric'
 
 require 'sinatra'
 if development?
-  require 'sinatra/reloader'
-  set :bind, '0.0.0.0'
+  require 'sinatra/reloader' # Shotgun and Reload do not work on JVM; use this instead
+  set :bind, '0.0.0.0' # This is so I can access the development server on a remote host
 end
 
 # _App-wide settings_
