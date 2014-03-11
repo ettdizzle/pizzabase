@@ -1,0 +1,16 @@
+<table>
+<tr>
+  <td>Shop Name</td>
+  <td>Location</td> <!--- city, state --->
+  <td>Quality</td>
+  <td>Phone Number</td>
+</tr>
+<% @pizza_shops.each do |pizza_shop| %>
+  <tr>
+    <td><%= "#{pizza_shop.name}" %></td>
+    <td><%= "#{pizza_shop.location.name}, #{pizza_shop.location.state}" %></td>
+    <td><%= "#{pizza_shop.quality}" %></td>
+    <td><%= "#{pizza_shop.phone}" %></td>
+  </tr>
+<% end %>
+</table>

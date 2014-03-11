@@ -31,9 +31,19 @@ require 'models/pizza_shop'# PizzaShop
 # _Handlers_
 get '/' do
   @title = "Hello"
-  @pizza_shop = PizzaShop.new # Instantiate a new pizza shop
-  @pizza_shop = PizzaShop.all.first # Set it to the first shop in the db
+  @pizza_shop = PizzaShop.all.first
   erb :index
+end
+
+get '/view/pizza-shops' do
+  @title = "Pizza Shops"
+  @pizza_shops = PizzaShop.all
+  erb :view_pizza_shops
+end
+
+get '/add/pizza-shop' do
+  @title = "Add Pizza Shop"
+  erb :add_pizza_shop
 end
 
 # post '/' do
