@@ -18,3 +18,4 @@ Todo
 ----
 * Figure out if unnecessary migrations are running all the time with ```<Entity>.create_schema.get```
 * Find a good way to deploy, perhaps with [TourqueBox](http://recipes.sinatrarb.com/p/deployment/jruby#label-Deployment+with+TorqueBox)
+* Generate some sample data. Find an easy way to dump as raw text and then read in ala the [Seattle example](https://github.com/relevance/diametric/wiki/Seattle-Example).
