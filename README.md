@@ -3,7 +3,12 @@ pizzabase
 
 A demo app using [Sinatra](http://www.sinatrarb.com/) on JRuby with [Datomic](www.datomic.com) (via [Diametric](https://github.com/relevance/diametric)).
 
-Specs
+Notes
+-----
+* Only communicating with Datomic using the Peer service. The REST service has too many limitations.
+* Avoiding using the ```enum``` type for datoms because Ruby has a hard time interpreting it.
+
+Setup
 -----
 * Will need to manually set up Datomic free transactor (which saves data to a file), and run it before launching the app.
   * ```$ bin/transactor config/samples/free-transactor-template.properties```
