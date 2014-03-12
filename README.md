@@ -32,7 +32,7 @@ Setup
 * Will need to initially create the database using the Datomic console.
   * From Datomic root directory ```$ bin/shell```
 ```
-  % String uri = "datomic:free://localhost:4334/pizzabase";
+  % String uri = "datomic:free://localhost:4334/sample";
   % Peer.createDatabase(uri);
 ```
 
