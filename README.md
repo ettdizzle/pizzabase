@@ -22,5 +22,6 @@ Setup
 Todo
 ----
 * Figure out if unnecessary migrations are running all the time with ```<Entity>.create_schema.get```
-* Find a good way to deploy, perhaps with [TourqueBox](http://recipes.sinatrarb.com/p/deployment/jruby#label-Deployment+with+TorqueBox)
+* Find a good way to deploy, perhaps with [TourqueBox](http://recipes.sinatrarb.com/p/deployment/jruby#label-Deployment+with+TorqueBox). Can everything be wrapped in a WAR file and deployed to Tomcat?
 * Generate some sample data. Find an easy way to dump as raw text and then read in ala the [Seattle example](https://github.com/relevance/diametric/wiki/Seattle-Example).
+* Automate Datomic startup (and shutdown?) and perhaps installation (including creating a new Datomic dB) with a bash script or rake.
