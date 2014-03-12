@@ -7,13 +7,13 @@ Trying to make a simple frontend to a Datomic database that allows users to add 
 Here we're making a database of Pizza Shops in the United States, and recording their name, location, phone number, and quality. We also have records of People who have names and hometowns (which point to the same kinds of entities that hold pizza shop locations).
 So if we have a Person object called Andrew, we can ask for all the excellent pizza shops in his hometown.
 ```
-> PizzaShop.where(:location => Andrew.hometown, :quality = "excellent")
+> PizzaShop.where(:location => Andrew.hometown.dbid, :quality = "excellent")
 ```
 
 We can also query for people who grew up in the same town where a certain pizza shop is located.
 ```
 > originals = PizzaShop.where(:name => "Original's").first
-> Person.where(:hometown => originals.location)
+> Person.where(:hometown => originals.location.dbid)
 ```
 
 This demonstrates one of the nice features of Datomic: no additional wiring is required to traverse the data in any direction. You can also make queries to any point in the database's history, which has nice applications for auditing and business intelligence.
