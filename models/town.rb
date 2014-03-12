@@ -4,7 +4,7 @@ class Town
   
   def self.states
     # Returns an array of ["State Name", "State Abbrev"]
-    IO.readlines("models/state_list").map { |line| line.chomp.split(',') }
+    IO.readlines("#{ROOT}/models/state_list").map { |line| line.chomp.split(',') }
   end
 
   attribute :name, String, index: true

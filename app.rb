@@ -20,13 +20,18 @@ set :db_uri, "datomic:free://localhost:4334/#{settings.db_name}"
 # Connect to database
 @conn = Diametric::Persistence::Peer.connect(settings.db_uri)
 
+# Sinatra settings
+configure do
+  set :root, File.expand_path(File.dirname(__FILE__))
+end
+# Can't pass settings into models, so using a constant
+ROOT = settings.root
+
 # _Load models_ #
-# Could load all in /models but we'll do each one explicitly for now.
-# I would also be okay with one models.rb file, but convention seems
-#   to be to put each entity in its own file.
-require 'models/person' # Person
-require 'models/town' # Town
-require 'models/pizza_shop'# PizzaShop
+models = %w(person town pizza_shop)
+models.each do |model|
+  require "#{settings.root}/models/#{model}"
+end
 
 # _Handlers_
 get '/' do
