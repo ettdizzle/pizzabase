@@ -35,12 +35,14 @@ get '/' do
   erb :index
 end
 
+# See all pizza shops
 get '/view/pizza-shops' do
-  @title = "Pizza Shops"
+  @title = "All Pizza Shops"
   @pizza_shops = PizzaShop.all
   erb :view_pizza_shops
 end
 
+# Add a pizza shop
 get '/add/pizza-shop' do
   @title = "Add Pizza Shop"
   @states = Town.states
@@ -68,6 +70,32 @@ post '/add/pizza-shop' do
   end
 end
 
+# Search pizza shops
+get '/find/pizza-shops' do
+  @title = "Find Pizza Shops"
+  @states = Town.states
+  @quality_options = PizzaShop.quality_options
+  erb :find_pizza_shops
+end
+
+post '/find/pizza-shops' do
+  @title = "Matching Pizza Shops" 
+  @name, @city, @state, @quality, @phone = params[:post].values_at(:name, :city, :state, :quality, :phone)
+
+  query = Hash.new
+  query[:name] = @name unless @name == ""
+  query[:phone] = @phone unless @phone == "" #Stronger validation will help here
+  query[:quality] = @quality unless @quality.empty?
+  if @city !="" && @state != ""
+    @town = Town.where(:name => @city, :state => @state).first
+    query[:location] = @town.dbid
+  elsif @state != ""
+    @towns = Town.where(:state => @state)
+    query[:location] = @towns.map(&:dbid)
+  end
+  @pizza_shops = PizzaShop.where(query)
+  erb :view_pizza_shops
+end
 __END__
 @@ index
 <% if @pizza_shop %>

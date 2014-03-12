@@ -1,5 +1,5 @@
 <!-- Post: name, city, state, quality, phone -->
-<form action="/add/pizza-shop" method="post">
+<form action="/find/pizza-shops" method="post">
   <p><label>Name of pizza shop:  <input type="text" name="post[name]" size="20"/></label></p>
   <p><label>City:  <input type="text" name="post[city]" size="20"/></label></p>
   <p><label>State: <select name="post[state]">
@@ -12,9 +12,9 @@
   <fieldset size="20">
     <legend> Quality: </legend>
     <% @quality_options.each do |quality| %>
-    <%= "<p><label> <input type=\"radio\" name=\"post[quality]\" value=\"#{quality}\">#{quality} </label></p>" %>
+    <%= "<p><label> <input type=\"checkbox\" name=\"post[quality][]\" value=\"#{quality}\">#{quality} </label></p>" %>
     <% end %>
   </fieldset>
   <br><br>
-  <input type="submit" value="Submit Pizza Shop">
+  <input type="submit" value="Find Pizza Shops">
 </form>
