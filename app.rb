@@ -43,14 +43,30 @@ end
 
 get '/add/pizza-shop' do
   @title = "Add Pizza Shop"
+  @states = Town.states
+  @quality_options = PizzaShop.quality_options
   erb :add_pizza_shop
 end
 
-# post '/' do
-#   @first_name, @last_name = params[:post].values_at(:first_name, :last_name)
-#   @title = "#{@first_name}"
-#   erb :hello
-# end
+post '/add/pizza-shop' do
+  @title = "Added Pizza Shop" 
+  @name, @city, @state, @quality, @phone = params[:post].values_at(:name, :city, :state, :quality, :phone)
+  # Look for town. Create new town if it doesn't exist in dB
+  @town = Town.where(:name => @city, :state => @state).first
+  unless @town
+    @town = Town.new(:name => @city, :state => @state)
+    @town.save
+  end
+  # Create new pizza shop and save
+  # TODO: See if the pizza shop already exists
+  @new_pizza_shop = PizzaShop.new(:name => @name, :location => @town, :quality => @quality, :phone => @phone)
+  if @new_pizza_shop.save
+    erb "<p>Pizza shop saved!</p>"
+    # TODO: Add link to view pizza shop list
+  else
+    erb "<p>It didn't work.</p>"
+  end
+end
 
 __END__
 @@ index
