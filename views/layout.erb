@@ -7,6 +7,14 @@
   <link href="/resources/styles.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
+<div id="nav">
+  <a href="/">Home</a> | 
+  <a href="/view/pizza-shops">View All Pizza Shops</a> | 
+  <a href="/find/pizza-shops">Search for Pizza Shops</a> | 
+  <a href="/add/pizza-shop">Add a Pizza Shop</a>
+  <br><br>
+<div>
+<h1><%= "#{@title}" %></h1>
   <%= yield %>
 </body>
 </html>

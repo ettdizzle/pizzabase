@@ -35,9 +35,8 @@ end
 
 # _Handlers_
 get '/' do
-  @title = "Hello"
-  @pizza_shop = PizzaShop.all.first
-  erb :index
+  @title = "Welcome to PizzaBase"
+  erb "<h2>All your pizza are belong to us</h2>"
 end
 
 # See all pizza shops
@@ -90,7 +89,7 @@ post '/find/pizza-shops' do
   query = Hash.new
   query[:name] = @name unless @name == ""
   query[:phone] = @phone unless @phone == "" #Stronger validation will help here
-  query[:quality] = @quality unless @quality.empty?
+  query[:quality] = @quality if @quality
   if @city !="" && @state != ""
     @town = Town.where(:name => @city, :state => @state).first
     query[:location] = @town.dbid
@@ -101,10 +100,3 @@ post '/find/pizza-shops' do
   @pizza_shops = PizzaShop.where(query)
   erb :view_pizza_shops
 end
-__END__
-@@ index
-<% if @pizza_shop %>
-<p> <%= "There's a good place called #{@pizza_shop.name}" %> </p>
-<% else %>
-<p> <%= "Could not lookup pizza shops" %> </p>
-<% end %>
