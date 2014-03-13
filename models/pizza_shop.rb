@@ -12,6 +12,6 @@ class PizzaShop
   attribute :quality, String
   validates :quality, inclusion: { in: self.quality_options }
   attribute :phone, String
-  validates :phone, format: { with: /^\d{3}.\d{3}.\d{4}$/, message: "Phone number must be ###-###-####" }
+  validates :phone, format: { with: /^\d{3}.\d{3}.\d{4}$/, message: "Phone number must be ###-###-####" }, :allow_blank => true
 end
 PizzaShop.create_schema.get
