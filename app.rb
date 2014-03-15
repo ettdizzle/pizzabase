@@ -9,19 +9,11 @@ if development?
   set :bind, '0.0.0.0' # This is so I can access the development server on a remote host
 end
 
-# _App-wide settings_
-# set is like attr_accessor for settings class
-# e.g, settings.app_name to call from anywhere
-set :app_name, "PizzaBase"
-# _Datomic settings_
-set :db_name, "sample"
-set :db_uri, "datomic:free://localhost:4334/#{settings.db_name}"
-
-# Connect to database
-@conn = Diametric::Persistence::Peer.connect(settings.db_uri)
-
-# Sinatra settings
 configure do
+  set :app_name, "PizzaBase"
+  set :db_name, "sample"
+  set :db_uri, "datomic:free://localhost:4334/#{settings.db_name}"
+  @conn = Diametric::Persistence::Peer.connect(settings.db_uri)
   set :root, File.expand_path(File.dirname(__FILE__))
 end
 # Can't pass settings into models, so using a constant
@@ -39,10 +31,14 @@ get '/' do
   erb "<h2>All your pizza are belong to us</h2>"
 end
 
+sort_order = Proc.new do |record|
+  [record.location.state, record.location.name, record.name]
+end
+
 # See all pizza shops
 get '/view/pizza-shops' do
   @title = "All Pizza Shops"
-  @pizza_shops = PizzaShop.all
+  @pizza_shops = PizzaShop.all.sort_by( &sort_order )
   erb :view_pizza_shops
 end
 
@@ -59,16 +55,16 @@ post '/add/pizza-shop' do
   @name, @city, @state, @quality, @phone = params[:post].values_at(:name, :city, :state, :quality, :phone)
   # Look for town. Create new town if it doesn't exist in dB
   @town = Town.where(:name => @city, :state => @state).first
-  unless @town.name # Not getting into this block because 
+  unless @town
     @town = Town.new(:name => @city, :state => @state)
     @town.save
   end
   # Create new pizza shop and save
   # TODO: See if the pizza shop already exists
   @new_pizza_shop = PizzaShop.new(:name => @name, :location => @town.dbid, :quality => @quality, :phone => @phone)
-  if @new_pizza_shop.save
+  @new_pizza_shop.save
+  if @new_pizza_shop.dbid
     erb "<p>Pizza shop saved!</p>"
-    # TODO: Add link to view pizza shop list
   else
     erb "<p>It didn't work.</p>"
   end
@@ -89,7 +85,6 @@ post '/find/pizza-shops' do
   query = Hash.new
   query[:name] = @name unless @name == ""
   query[:phone] = @phone unless @phone == "" #Stronger validation will help here
-  query[:quality] = @quality if @quality
   if @city !="" && @state != ""
     @town = Town.where(:name => @city, :state => @state).first
     query[:location] = @town.dbid
@@ -100,7 +95,16 @@ post '/find/pizza-shops' do
     @towns = Town.where(:name => @city)
     query[:location] = @towns.map(&:dbid)
   end
-  @pizza_shops = PizzaShop.where(query).all
+  # Lame hack to overcome Diametric's inability to pass an array as a
+  # argument for a query. Filtering on quality in pure ruby.
+  if @quality && @quality.count == 1
+    query[:quality] = @quality.first
+  end
+  unless @quality && @quality.count > 1
+    @pizza_shops = PizzaShop.where(query).all
+  else
+    @pizza_shops = PizzaShop.where(query).all.select { |record| @quality.include? record.quality}
+  end
+  @pizza_shops.sort_by!( &sort_order )
   erb :view_pizza_shops
-#  erb "<p> #{p query} </p>"
 end
